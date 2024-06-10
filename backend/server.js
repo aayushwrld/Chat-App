@@ -2,6 +2,7 @@ import express from 'express'
 import dotenv from 'dotenv'
 import cookieParser from 'cookie-parser'
 import path from 'path'
+import cors from 'cors';
 
 import authRoutes from './routes/auth.routes.js';
 import messageRoutes from './routes/message.routes.js';
@@ -14,6 +15,7 @@ dotenv.config({ path: path.resolve('../.env') });
 
 const port = process.env.PORT || 8080;
 
+app.use(cors());
 app.use(express.json());
 app.use(cookieParser());
 

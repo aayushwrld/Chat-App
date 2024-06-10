@@ -11,7 +11,7 @@ export const signup = async (req, res) => {
 		}
 
 		const user = await User.findOne({ username });
-
+	
 		if (user) {
 			return res.status(400).json({ error: "Username already exists" });
 		}
@@ -43,8 +43,9 @@ export const signup = async (req, res) => {
 		} else {
 			res.status(400).json({ error: "Invalid user data" });
 		}
-	} catch (error) {
-		console.log("Error in signup controller", error.message);
+	} catch (err) {
+		console.log("Error in signup controller", err.message);
+		console.log(err);
 		res.status(500).json({ error: "Internal Server Error" });
 	}
 };

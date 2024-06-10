@@ -1,8 +1,29 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 import GenderCheckbox from '../components/GenderCheckbox'
+import useSignup from '../hooks/useSignup';
 
 function Signup() {
+
+  const [inputs, setInputs] = useState({
+    fullName: '',
+    username: '',
+    password: '',
+    confirmPassword: '',
+    gender: ''
+  })
+
+  const { loading, signup } = useSignup();
+
+  const handleCheckboxChange = (gender) => {
+		setInputs({ ...inputs, gender });
+	};
+
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+		await signup(inputs);
+	};
+
   return (
     <div className="flex min-h-screen justify-center items-center">
       <div className="bg-custom-gray rounded-lg shadow-2xl p-8 w-full sm:max-w-md">
@@ -13,7 +34,7 @@ function Signup() {
         </div>
 
         <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-          <form className="space-y-6" >
+          <form className="space-y-6" onSubmit={handleSubmit}>
             <div>
               <label
                 htmlFor="name"
@@ -29,6 +50,7 @@ function Signup() {
                   autoComplete="given-name"
                   required
                   className="block w-full rounded-md border-0 py-1.5 shadow-sm ring-1 ring-inset ring-blue-600 placeholder:text-blue-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm sm:leading-6 bg-gray-200 text-black"
+                  value={inputs.fullName} onChange={(e) => setInputs({ ...inputs, fullName: e.target.value })}
                 />
               </div>
             </div>
@@ -44,9 +66,11 @@ function Signup() {
                 <input
                   id="username"
                   name="username"
+                  autoComplete='username'
                   type="text"
                   required
                   className="block w-full rounded-md border-0 py-1.5 shadow-sm ring-1 ring-inset ring-blue-600 placeholder:text-blue-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm sm:leading-6 bg-gray-200 text-black"
+                  value={inputs.username} onChange={(e) => setInputs({ ...inputs, username: e.target.value })}
                 />
               </div>
             </div>
@@ -66,6 +90,7 @@ function Signup() {
                   autoComplete="current-password"
                   required
                   className="block w-full rounded-md border-0 py-1.5 shadow-sm ring-1 ring-inset ring-blue-600 placeholder:text-blue-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm sm:leading-6 bg-gray-200 text-black"
+                  value={inputs.password} onChange={(e) => setInputs({ ...inputs, password: e.target.value })}
                 />
               </div>
             </div>
@@ -75,26 +100,27 @@ function Signup() {
                 htmlFor="password"
                 className="block text-sm font-medium leading-6 text-black"
               >
-                Password
+                Confirm Password
               </label>
               <div className="mt-2">
                 <input
-                  id="password"
-                  name="password"
+                  id="confirmPassword"
+                  name="confirmPassword"
                   type="password"
                   autoComplete="current-password"
                   required
                   className="block w-full rounded-md border-0 py-1.5 shadow-sm ring-1 ring-inset ring-blue-600 placeholder:text-blue-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm sm:leading-6 bg-gray-200 text-black"
+                  value={inputs.confirmPassword} onChange={(e) => setInputs({ ...inputs, confirmPassword: e.target.value })}
                 />
               </div>
             </div>
-            <GenderCheckbox />
+            <GenderCheckbox onCheckboxChange = {handleCheckboxChange} selectedGender = {inputs.gender} />
             <div>
               <button
                 type="submit"
-                className="flex w-full justify-center rounded-md bg-blue-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-blue-700 transition duration-300 ease-in-out focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
+                className="flex w-full justify-center rounded-md bg-blue-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-blue-700 transition duration-300 ease-in-out focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600" disabled={loading}
               >
-                Sign up
+                {loading ? <span className='loading loading-spinner'></span> : "Sign Up"}
               </button>
             </div>
           </form>
