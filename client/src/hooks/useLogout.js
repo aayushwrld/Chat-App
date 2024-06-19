@@ -1,6 +1,9 @@
 import { useState } from "react";
 import { useAuthContext } from "../context/AuthContext";
 import { toast } from "sonner";
+import { deleteCookie } from "../utils/cookies";
+import axios from 'axios';
+import { loginCheck } from "../utils/loginCheck";
 
 const useLogout = () => {
     const [loading, setLoading] = useState(false);
@@ -9,24 +12,21 @@ const useLogout = () => {
     const logout = async () => {
         setLoading(true);
         try {
-            const res = await fetch("/api/auth/logout", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
+            const res = await axios.post("http://localhost:8000/api/auth/logout",{
+                headers: { "Content-Type": "application/json" }
             });
 
-            // Check if the response body is not empty
-            const text = await res.text();
-            const data = text ? JSON.parse(text) : {};
-
+            const data = res.data;
             if (data.error) {
                 throw new Error(data.error);
             }
 
-            localStorage.removeItem("chat-user");
-            setAuthUser(null);
+            deleteCookie("jwt");
+            deleteCookie("username");
+            setAuthUser(loginCheck());
         } catch (error) {
             const errorMessage = error.response?.data?.error || error.message;
-			toast.error(errorMessage);
+            toast.error(errorMessage);
         } finally {
             setLoading(false);
         }

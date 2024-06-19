@@ -35,6 +35,7 @@ function Login() {
                 <input
                   id="username"
                   name="username"
+                  autoComplete="username"
                   type="text"
                   required
                   className="block w-full rounded-md border-0 py-1.5 shadow-sm ring-2 ring-inset ring-blue-600 placeholder:text-blue-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm sm:leading-6 bg-gray-200 text-black"
